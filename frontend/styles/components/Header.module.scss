@@ -1,0 +1,78 @@
+// Header
+.header {
+  padding: 1.5rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  -webkit-box-pack: justify;
+  align-items: center;
+
+  // Seperate divs
+  > div {
+    width: auto;
+    flex: 1 1 50%;
+    display: flex;
+    align-items: center;
+  }
+}
+
+// Header: Logo
+.header__logo {
+  justify-content: flex-start;
+
+  > a {
+    transition: 0.5s ease;
+
+    &:hover {
+      transform: rotate(10deg);
+    }
+  }
+}
+
+// Header: Connect Wallet + Actions menu
+.header__actions {
+  justify-content: flex-end;
+
+  // Universal hover colors
+  > button {
+    &:hover {
+      border-color: rgb(201, 201, 201) !important;
+    }
+  }
+
+  // Connect Wallet
+  > button:nth-of-type(1) {
+    min-width: 150px;
+    line-height: 1.15;
+    font-size: 16px;
+    border-radius: 12px;
+    padding: 1rem;
+    margin: 0px 1rem;
+    border: 1px solid rgb(255, 255, 255);
+    color: rgb(0, 93, 194);
+    background-color: rgb(186, 206, 255);
+  }
+
+  // Actions menu
+  > button:nth-of-type(2) {
+    border-radius: 12px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    border: 1px solid rgb(255, 255, 255);
+
+    > img {
+      display: flex;
+      height: 25px;
+      width: 25px;
+    }
+  }
+}
+
+// Responsive
+@media screen and (max-width: 728px) {
+  .header {
+    padding: 2rem 1rem;
+  }
+}

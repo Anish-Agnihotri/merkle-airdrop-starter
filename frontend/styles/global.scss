@@ -1,0 +1,29 @@
+html,
+body {
+  // Fix spacing
+  margin: 0px;
+  padding: 0px;
+
+  // Font
+  font-feature-settings: "ss01";
+  text-rendering: optimizeLegibility;
+  font-family: "Inter", sans-serif;
+
+  // Background
+  background-color: rgb(247, 248, 250);
+}
+
+// Override default link styles
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+// Fix fonts for buttons and inputs
+button,
+input {
+  font-feature-settings: "ss01";
+  text-rendering: optimizeLegibility;
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+}
