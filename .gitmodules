@@ -1,3 +1,6 @@
 [submodule "contracts/lib/ds-test"]
 	path = contracts/lib/ds-test
 	url = https://github.com/dapphub/ds-test
+[submodule "contracts/lib/solmate"]
+	path = contracts/lib/solmate
+	url = https://github.com/rari-capital/solmate
