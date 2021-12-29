@@ -10,7 +10,7 @@ Steps:
 
 ## Similar work and credits
 
-- [Astrodrop](https://astrodrop.xyz/)—Simpler way to spin up a token airdrop with claim page, given you have already deployed and minted a token.
+- [Astrodrop](https://astrodrop.xyz/)—Simpler way to spin up a airdrop with claim page, given existing token
 - [Uniswap Merkle Distributor](https://github.com/Uniswap/merkle-distributor)—Uniswap's merkle distribution smart contracts
 
 ## License
