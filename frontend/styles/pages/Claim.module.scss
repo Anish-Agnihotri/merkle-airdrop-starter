@@ -1,0 +1,61 @@
+// Claim page
+.claim {
+  // Sizing
+  max-width: 600px;
+  margin: 0px auto 50px auto;
+  text-align: center;
+  padding: 1rem;
+}
+
+// Individual card container
+.card {
+  background: white;
+  border-radius: 1rem;
+  border: 1px solid rgb(227, 227, 227);
+  padding: 2rem;
+  width: calc(100% - 4rem - 20px);
+  max-width: 500px;
+  box-shadow: rgb(117 117 117 / 10%) 0px 10px 20px 5px;
+  text-align: left;
+
+  // Header
+  > h1 {
+    margin: 0px;
+    line-height: 1.2;
+    font-size: 25px;
+  }
+
+  // Description
+  > p {
+    line-height: 1.5;
+    margin: 1rem 0px;
+  }
+
+  // Main blue button
+  > button {
+    width: 100%;
+    margin-top: 1rem;
+    font-weight: 500;
+    border-radius: 12px;
+    padding: 1rem;
+    font-size: 16px;
+    border: 1px solid rgb(255, 255, 255);
+    color: rgb(0, 93, 194);
+    background-color: rgb(186, 206, 255);
+
+    &:hover {
+      border-color: rgb(201, 201, 201);
+    }
+
+    // Disable border color change on disabled hover
+    &:disabled:hover {
+      border-color: rgb(255, 255, 255) !important;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      border-color: rgb(255, 255, 255) !important;
+      cursor: not-allowed;
+    }
+  }
+}
