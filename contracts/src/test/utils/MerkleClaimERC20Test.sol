@@ -30,7 +30,7 @@ contract MerkleClaimERC20Test is DSTest {
       "MT", 
       18, 
       // Merkle root containing ALICE with 100e18 tokens but no BOB
-      0xb811538d9ad73c9738171fa42474e584ea07b8c629fc7e4407179dbc53e97db0
+      0x6a0b89fc219e9e72ad683e00d9c152532ec8e5c559600e04160d310936400a00
     );
 
     // Setup airdrop users
