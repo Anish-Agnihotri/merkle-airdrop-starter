@@ -1,14 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-pragma solidity 0.8.10;
+pragma solidity >=0.8.0;
 
 /// ============ Imports ============
 
 import { ERC20 } from "@solmate/tokens/ERC20.sol"; // Solmate: ERC20
-import { MerkleProof } from "@openzeppelin-contracts/utils/cryptography/MerkleProof.sol"; // OZ: MerkleProof
+import { MerkleProof } from "@openzeppelin/utils/cryptography/MerkleProof.sol"; // OZ: MerkleProof
 
 /// @title MerkleClaimERC20
 /// @notice ERC20 claimable by members of a merkle tree
 /// @author Anish Agnihotri <contact@anishagnihotri.com>
+/// @dev Solmate ERC20 includes unused _burn logic that can be removed to optimize deployment cost
 contract MerkleClaimERC20 is ERC20 {
 
   /// ============ Immutable storage ============
@@ -25,8 +26,8 @@ contract MerkleClaimERC20 is ERC20 {
 
   /// @notice Thrown if address has already claimed
   error AlreadyClaimed();
-  /// @notice Thrown if address is not part of Merkle tree
-  error AddressNotInMerkle();
+  /// @notice Thrown if address/amount are not part of Merkle tree
+  error NotInMerkle();
 
   /// ============ Constructor ============
 
@@ -64,7 +65,7 @@ contract MerkleClaimERC20 is ERC20 {
     // Verify merkle proof, or revert if not in tree
     bytes32 leaf = keccak256(abi.encodePacked(to, amount));
     bool isValidLeaf = MerkleProof.verify(proof, merkleRoot, leaf);
-    if (!isValidLeaf) revert AddressNotInMerkle();
+    if (!isValidLeaf) revert NotInMerkle();
 
     // Set address to claimed
     hasClaimed[to] = true;
