@@ -18,6 +18,9 @@ cargo install --git https://github.com/gakonst/foundry --bin forge --locked
 # Go to contracts directory, if not already there
 cd contracts/
 
+# Get dependencies
+forge update
+
 # Run tests
 forge test --root . --verbosity 4
 ```
