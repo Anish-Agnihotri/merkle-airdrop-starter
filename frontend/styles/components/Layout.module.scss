@@ -1,0 +1,5 @@
+// Layout: Content
+.layout__content {
+  // Force minimum height (to push footer to bottom without flexbox)
+  min-height: calc(100vh - calc(70px - 2rem) - 150px);
+}
