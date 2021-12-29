@@ -21,13 +21,7 @@ export default function Home() {
       <div className={styles.home}>
         {/* Project logo */}
         <div>
-          <Image
-            src={process.env.NEXT_PUBLIC_LOGO_PATH ?? "/logo.png"}
-            alt="Logo"
-            width={250}
-            height={250}
-            priority
-          />
+          <Image src="/logo.png" alt="Logo" width={250} height={250} priority />
         </div>
 
         {/* Project introduction article, if it exists */}

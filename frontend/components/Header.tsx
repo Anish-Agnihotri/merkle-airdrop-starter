@@ -52,13 +52,7 @@ export default function Header() {
       <div className={styles.header__logo}>
         <Link href="/">
           <a>
-            <Image
-              src={process.env.NEXT_PUBLIC_LOGO_PATH ?? "/logo.png"}
-              alt="Logo"
-              width={58}
-              height={58}
-              priority
-            />
+            <Image src="/logo.png" alt="Logo" width={58} height={58} priority />
           </a>
         </Link>
       </div>
