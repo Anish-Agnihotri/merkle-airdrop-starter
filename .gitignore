@@ -1,3 +1,9 @@
 # Contracts
 contracts/cache
 contracts/out
+
+# Generator
+generator/node_modules
+generator/dist
+generator/*.log
+generator/merkle.json
