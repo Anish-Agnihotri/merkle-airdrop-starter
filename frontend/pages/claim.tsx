@@ -1,51 +1,77 @@
+import { eth } from "state/eth"; // Global state: ETH
+import { useState } from "react"; // State management
+import { token } from "state/token"; // Global state: Tokens
 import Layout from "components/Layout"; // Layout wrapper
-import { useEffect, useState } from "react";
-import { eth } from "state/eth";
-import styles from "styles/pages/Claim.module.scss";
+import styles from "styles/pages/Claim.module.scss"; // Page styles
 
-/*
-  States:
-  1. Loading claim status and merkle entry state
-  2. Already claimed state
-  3. Pending claim state
-  4. No claim available state
-*/
 export default function Claim() {
   // Global ETH state
   const { address, unlock }: { address: string | null; unlock: Function } =
     eth.useContainer();
-  // Loading status
-  const [loading, setLoading] = useState<boolean>(true);
-  // Claimed
-  const [claimed, setClaimed] = useState<boolean>(false);
-  // Available tokens
-  const [availableTokens, setAvailableTokens] = useState<number>(0);
+  // Global token state
+  const {
+    dataLoading,
+    numTokens,
+    alreadyClaimed,
+    claimAirdrop,
+  }: {
+    dataLoading: boolean;
+    numTokens: number;
+    alreadyClaimed: boolean;
+    claimAirdrop: Function;
+  } = token.useContainer();
+  // Local button loading
+  const [buttonLoading, setButtonLoading] = useState<boolean>(false);
 
-  const collectClaimDetails = async () => {};
-
-  // On load --> collect details about address
-  useEffect(() => {
-    // Collect only if authenticated
-    if (address) {
-      collectClaimDetails();
-    }
-  }, [address]);
+  /**
+   * Claims airdrop with local button loading
+   */
+  const claimWithLoading = async () => {
+    setButtonLoading(true); // Toggle
+    await claimAirdrop(); // Claim
+    setButtonLoading(false); // Toggle
+  };
 
   return (
     <Layout>
       <div className={styles.claim}>
         {!address ? (
+          // Not authenticated
           <div className={styles.card}>
             <h1>You are not authenticated.</h1>
             <p>Please connect with your wallet to check your airdrop.</p>
             <button onClick={() => unlock()}>Connect Wallet</button>
           </div>
-        ) : loading ? (
+        ) : dataLoading ? (
+          // Loading details about address
           <div className={styles.card}>
             <h1>Loading airdrop details...</h1>
             <p>Please hold while we collect details about your address.</p>
           </div>
-        ) : null}
+        ) : numTokens == 0 ? (
+          // Not part of airdrop
+          <div className={styles.card}>
+            <h1>You do not qualify.</h1>
+            <p>Unfortunately, your address does not qualify for the airdrop.</p>
+          </div>
+        ) : alreadyClaimed ? (
+          // Already claimed airdrop
+          <div className={styles.card}>
+            <h1>Already claimed.</h1>
+            <p>
+              Your address ({address}) has already claimed {numTokens} tokens.
+            </p>
+          </div>
+        ) : (
+          // Claim your airdrop
+          <div className={styles.card}>
+            <h1>Claim your airdrop.</h1>
+            <p>Your address qualifies for {numTokens} tokens.</p>
+            <button onClick={claimWithLoading} disabled={buttonLoading}>
+              {buttonLoading ? "Claiming Airdrop..." : "Claim Airdrop"}
+            </button>
+          </div>
+        )}
       </div>
     </Layout>
   );

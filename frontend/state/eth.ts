@@ -46,8 +46,8 @@ function useEth() {
   const unlock = async () => {
     // Enables wallet selection via BNC onboard
     if (onboard) {
-      await onboard.walletSelect();
-      await onboard.walletCheck();
+      const connected = await onboard.walletSelect();
+      if (connected) await onboard.walletCheck();
     }
   };
 
