@@ -23,6 +23,7 @@ const wallets: (WalletModule | WalletInitOptions)[] = [
   { walletName: "metamask" },
   {
     walletName: "walletConnect",
+    networkId,
     rpc: {
       [networkId]: process.env.NEXT_PUBLIC_RPC_URL ?? "",
     },
@@ -46,13 +47,19 @@ function useEth() {
   const unlock = async () => {
     // Enables wallet selection via BNC onboard
     if (onboard) {
-      const connected = await onboard.walletSelect();
-      if (connected) await onboard.walletCheck();
+      // Initialize wallet
+      const walletSelected: boolean = await onboard.walletSelect();
+      // If initialized, ready wallet
+      if (walletSelected) {
+        await onboard.walletCheck();
+      }
     }
   };
 
-  // --> Lifecycle: on mount
-  useEffect(() => {
+  /**
+   * Initialize onboard instance and store
+   */
+  const initializeOnboard = () => {
     // Onboard provider
     const onboard = Onboard({
       networkId,
@@ -66,6 +73,15 @@ function useEth() {
       },
       // Track subscriptions
       subscriptions: {
+        // On address update
+        address: async (address) => {
+          // Update address
+          setAddress(address);
+          // If no address, nullify provider
+          if (!address) {
+            setProvider(null);
+          }
+        },
         // On wallet update
         wallet: async (wallet) => {
           // If wallet provider exists
@@ -73,27 +89,36 @@ function useEth() {
             // Collect ethers provider
             const provider = new ethers.providers.Web3Provider(wallet.provider);
 
-            // Collect address
-            const signer = await provider.getSigner();
-            const address: string = await signer.getAddress();
-
-            // Update provider, address, and raw address
+            // Update provider
             setProvider(provider);
-            setAddress(address);
+
+            // Update selected wallet
+            window.localStorage.setItem("selectedWallet", wallet.name ?? "");
           } else {
             // Nullify data
             setProvider(null);
-            setAddress(null);
           }
         },
       },
       // Force connect on walletCheck for WalletConnect
-      walletCheck: [{ checkName: "network" }, { checkName: "connect" }],
+      walletCheck: [{ checkName: "connect" }, { checkName: "network" }],
     });
 
     // Update onboard
     setOnboard(onboard);
-  }, []);
+  };
+
+  // --> Lifecycle: on mount
+  useEffect(initializeOnboard, []);
+  useEffect(() => {
+    // If wallet was already selected and onboard exists
+    const previouslySelectedWallet =
+      window.localStorage.getItem("selectedWallet");
+    if (previouslySelectedWallet && onboard) {
+      // Select, existing wallet
+      onboard.walletSelect(previouslySelectedWallet);
+    }
+  }, [onboard]);
 
   return { address, provider, unlock };
 }
