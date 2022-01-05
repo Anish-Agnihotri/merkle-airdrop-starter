@@ -1,6 +1,6 @@
 # frontend
 
-Accompanies [MerkleDropERC20](https://github.com/Anish-Agnihotri/merkle-airdrop-starter/tree/master/contracts) contracts; heavy similarity to the [GAS DAO airdrop frontend](https://www.gasdao.org/).
+Accompanies [MerkleDropERC20](https://github.com/Anish-Agnihotri/merkle-airdrop-starter/tree/master/contracts) contracts; heavy similarity to the [GAS DAO airdrop frontend](https://www.gasdao.org/) (GAS DAO: implemented by [sax](https://twitter.com/0xsaxophone), originally inspired by work from [design @ens](https://twitter.com/dzneth) for the [$ENS airdrop claim](https://claim.ens.domains/)).
 
 Allows users to connect their wallet and claim airdrops, given they are part of the Merkle tree.
 
