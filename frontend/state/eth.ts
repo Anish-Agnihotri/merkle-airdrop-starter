@@ -28,6 +28,7 @@ const wallets: (WalletModule | WalletInitOptions)[] = [
       [networkId]: process.env.NEXT_PUBLIC_RPC_URL ?? "",
     },
   },
+  { walletName: "tally" },
 ];
 
 // Token name
