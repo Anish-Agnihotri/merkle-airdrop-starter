@@ -18,7 +18,9 @@ cd contracts/
 forge update
 
 # Run tests
-forge test --root . --verbosity 4
+forge test --root .
+# Run tests with stack traces
+forge test --root . -vvvv
 ```
 
 ## Deploy
