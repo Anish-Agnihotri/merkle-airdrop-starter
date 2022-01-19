@@ -6,11 +6,7 @@ ERC20 token claimable by members of a [Merkle tree](https://en.wikipedia.org/wik
 
 Tests use [Foundry: Forge](https://github.com/gakonst/foundry).
 
-### Install Forge
-
-```bash
-cargo install --git https://github.com/gakonst/foundry --bin forge --locked
-```
+Install Foundry using the installation steps in the README of the linked repo.
 
 ### Run tests
 
@@ -22,7 +18,9 @@ cd contracts/
 forge update
 
 # Run tests
-forge test --root . --verbosity 4
+forge test --root .
+# Run tests with stack traces
+forge test --root . -vvvv
 ```
 
 ## Deploy
