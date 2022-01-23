@@ -112,7 +112,7 @@ function useToken() {
     const formattedAddress: string = ethers.utils.getAddress(address);
     // Get tokens for address
     const numTokens: string = ethers.utils
-      .parseUnits(config.airdrop[address].toString(), config.decimals)
+      .parseUnits(config.airdrop[ethers.utils.getAddress(address)].toString(), config.decimals)
       .toString();
 
     // Generate hashed leaf from address
