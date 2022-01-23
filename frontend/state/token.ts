@@ -76,7 +76,9 @@ function useToken() {
    * @returns {number} of tokens claimable
    */
   const getAirdropAmount = (address: string): number => {
-    // If address is in airdrop
+    // If address is in airdrop. convert address to correct checksum
+    address = ethers.utils.getAddress(address)
+    
     if (address in config.airdrop) {
       // Return number of tokens available
       return config.airdrop[address];
