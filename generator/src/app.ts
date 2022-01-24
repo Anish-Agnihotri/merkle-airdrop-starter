@@ -33,8 +33,9 @@ function throwErrorAndExit(error: string): void {
   // Collect config
   const decimals: number = configData.decimals ?? 18;
   const airdrop: Record<string, number> = configData.airdrop;
+  const flavor: String = configData.flavor
 
   // Initialize and call generator
-  const generator = new Generator(decimals, airdrop);
+  const generator = new Generator(decimals, airdrop, flavor);
   await generator.process();
 })();

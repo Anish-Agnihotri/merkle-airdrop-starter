@@ -25,15 +25,29 @@ export default class Generator {
    * @param {number} decimals of token
    * @param {Record<string, number>} airdrop address to token claim mapping
    */
-  constructor(decimals: number, airdrop: Record<string, number>) {
+  constructor(decimals: number, airdrop: Record<string, number>, flavor: String) {
     // For each airdrop entry
     for (const [address, tokens] of Object.entries(airdrop)) {
+      let value
+      switch (flavor) {
+        case 'ERC1155':
+          value = tokens.toString()
+          break;
+      
+        case 'ERC20':
+          value = parseUnits(tokens.toString(), decimals).toString()
+          break;
+
+        default:
+          value = parseUnits(tokens.toString(), decimals).toString()
+          break;
+      }
       // Push:
       this.recipients.push({
         // Checksum address
         address: getAddress(address),
         // Scaled number of tokens claimable by recipient
-        value: parseUnits(tokens.toString(), decimals).toString()
+        value
       });
     }
   }

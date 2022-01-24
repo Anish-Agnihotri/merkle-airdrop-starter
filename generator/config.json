@@ -1,4 +1,5 @@
 {
+  "flavor": "erc20",
   "decimals": 18,
   "airdrop": {
     "0x016C8780e5ccB32E5CAA342a926794cE64d9C364": 10,
