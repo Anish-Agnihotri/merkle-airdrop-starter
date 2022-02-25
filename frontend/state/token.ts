@@ -76,6 +76,7 @@ function useToken() {
    * @returns {number} of tokens claimable
    */
   const getAirdropAmount = (address: string): number => {
+    address = ethers.utils.getAddress(address);
     // If address is in airdrop
     if (address in config.airdrop) {
       // Return number of tokens available
@@ -95,6 +96,7 @@ function useToken() {
     // Collect token contract
     const token: ethers.Contract = getContract();
     // Return claimed status
+    address = ethers.utils.getAddress(address);
     return await token.hasClaimed(address);
   };
 
@@ -103,6 +105,8 @@ function useToken() {
     if (!address) {
       throw new Error("Not Authenticated");
     }
+    
+    address = ethers.utils.getAddress(address);
 
     // Collect token contract
     const token: ethers.Contract = getContract();
@@ -117,6 +121,8 @@ function useToken() {
     const leaf: Buffer = generateLeaf(formattedAddress, numTokens);
     // Generate airdrop proof
     const proof: string[] = merkleTree.getHexProof(leaf);
+
+    console.log(`formattedAddress: ${formattedAddress}; numTokens: ${numTokens}; proof: ${proof}`);
 
     // Try to claim airdrop and refresh sync status
     try {
