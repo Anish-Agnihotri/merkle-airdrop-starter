@@ -9,15 +9,16 @@ import { createContainer } from "unstated-next"; // State management
 /**
  * Generate Merkle Tree leaf from address and value
  * @param {string} address of airdrop claimee
- * @param {string} value of airdrop tokens to claimee
+ * @param {string} valueEthereum of airdrop tokens to claimee
+ * @param {string} valuePolygon of airdrop tokens to claimee
  * @returns {Buffer} Merkle Tree node
  */
-function generateLeaf(address: string, value: string): Buffer {
+function generateLeaf(address: string, valueEthereum: string, valuePolygon: string): Buffer {
   return Buffer.from(
     // Hash in appropriate Merkle format
     ethers.utils
-      .solidityKeccak256(["address", "uint256"], [address, value])
-      .slice(2),
+      .solidityKeccak256(["address", "uint256", "uint256"], [address, valueEthereum, valuePolygon])
+      .slice(3),
     "hex"
   );
 }
@@ -28,7 +29,8 @@ const merkleTree = new MerkleTree(
   Object.entries(config.airdrop).map(([address, tokens]) =>
     generateLeaf(
       ethers.utils.getAddress(address),
-      ethers.utils.parseUnits(tokens.toString(), config.decimals).toString()
+      ethers.utils.parseUnits(tokens[0].toString(), config.decimals).toString(),
+      ethers.utils.parseUnits(tokens[1].toString(), config.decimals).toString(),
     )
   ),
   // Hashing function
@@ -63,7 +65,7 @@ function useToken() {
         // hasClaimed mapping
         "function hasClaimed(address) public view returns (bool)",
         // Claim function
-        "function claim(address to, uint256 amount, bytes32[] calldata proof) external",
+        "function claim(address to, uint256 amountEthereum, uint256 amountPolygon, bytes32[] calldata proof) external",
       ],
       // Get signer from authed provider
       provider?.getSigner()
@@ -75,7 +77,7 @@ function useToken() {
    * @param {string} address to check
    * @returns {number} of tokens claimable
    */
-  const getAirdropAmount = (address: string): number => {
+  const getAirdropAmount = (address: string): number[] => {
     address = ethers.utils.getAddress(address);
     // If address is in airdrop
     if (address in config.airdrop) {
@@ -84,7 +86,7 @@ function useToken() {
     }
 
     // Else, return 0 tokens
-    return 0;
+    return [0,0];
   };
 
   /**
@@ -113,20 +115,24 @@ function useToken() {
     // Get properly formatted address
     const formattedAddress: string = ethers.utils.getAddress(address);
     // Get tokens for address
-    const numTokens: string = ethers.utils
-      .parseUnits(config.airdrop[address].toString(), config.decimals)
-      .toString();
+    const numTokensEthereum: string = ethers.utils
+    .parseUnits(config.airdrop[address][0].toString(), config.decimals)
+    .toString();
+
+    const numTokensPolygon: string = ethers.utils
+    .parseUnits(config.airdrop[address][1].toString(), config.decimals)
+    .toString();
 
     // Generate hashed leaf from address
-    const leaf: Buffer = generateLeaf(formattedAddress, numTokens);
+    const leaf: Buffer = generateLeaf(formattedAddress, numTokensEthereum, numTokensPolygon);
     // Generate airdrop proof
     const proof: string[] = merkleTree.getHexProof(leaf);
 
-    console.log(`formattedAddress: ${formattedAddress}; numTokens: ${numTokens}; proof: ${proof}`);
+    console.log(`formattedAddress: ${formattedAddress}; numTokens: ${numTokensEthereum}, numTokens: ${numTokensPolygon}; proof: ${proof}`);
 
     // Try to claim airdrop and refresh sync status
     try {
-      const tx = await token.claim(formattedAddress, numTokens, proof);
+      const tx = await token.claim(formattedAddress, numTokensEthereum, numTokensPolygon, proof);
       await tx.wait(1);
       await syncStatus();
     } catch (e) {
@@ -145,10 +151,10 @@ function useToken() {
     if (address) {
       // Collect number of tokens for address
       const tokens = getAirdropAmount(address);
-      setNumTokens(tokens);
+      setNumTokens(tokens[0]);
 
       // Collect claimed status for address, if part of airdrop (tokens > 0)
-      if (tokens > 0) {
+      if (tokens[0] > 0 && tokens[1] > 0) {
         const claimed = await getClaimedStatus(address);
         setAlreadyClaimed(claimed);
       }

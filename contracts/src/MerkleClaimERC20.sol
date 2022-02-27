@@ -56,14 +56,15 @@ contract MerkleClaimERC20 is ERC20 {
 
   /// @notice Allows claiming tokens if address is part of merkle tree
   /// @param to address of claimee
-  /// @param amount of tokens owed to claimee
+  /// @param amountEthereum of tokens owed to claimee
+  /// @param amountPolygon of tokens owed to claimee
   /// @param proof merkle proof to prove address and amount are in tree
-  function claim(address to, uint256 amount, bytes32[] calldata proof) external {
+  function claim(address to, uint256 amountEthereum, uint256 amountPolygon, bytes32[] calldata proof) external {
     // Throw if address has already claimed tokens
     if (hasClaimed[to]) revert AlreadyClaimed();
 
     // Verify merkle proof, or revert if not in tree
-    bytes32 leaf = keccak256(abi.encodePacked(to, amount));
+    bytes32 leaf = keccak256(abi.encodePacked(to, amountEthereum, amountPolygon));
     bool isValidLeaf = MerkleProof.verify(proof, merkleRoot, leaf);
     if (!isValidLeaf) revert NotInMerkle();
 
@@ -71,9 +72,9 @@ contract MerkleClaimERC20 is ERC20 {
     hasClaimed[to] = true;
 
     // Mint tokens to address
-    _mint(to, amount);
+    _mint(to, amountEthereum);
 
     // Emit claim event
-    emit Claim(to, amount);
+    emit Claim(to, amountEthereum);
   }
 }

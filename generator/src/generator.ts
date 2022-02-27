@@ -13,7 +13,8 @@ type AirdropRecipient = {
   // Recipient address
   address: string;
   // Scaled-to-decimals token value
-  value: string;
+  valueEthereum: string;
+  valuePolygon: string
 };
 
 export default class Generator {
@@ -25,7 +26,7 @@ export default class Generator {
    * @param {number} decimals of token
    * @param {Record<string, number>} airdrop address to token claim mapping
    */
-  constructor(decimals: number, airdrop: Record<string, number>) {
+  constructor(decimals: number, airdrop: Record<string, number[]>) {
     // For each airdrop entry
     for (const [address, tokens] of Object.entries(airdrop)) {
       // Push:
@@ -33,7 +34,8 @@ export default class Generator {
         // Checksum address
         address: getAddress(address),
         // Scaled number of tokens claimable by recipient
-        value: parseUnits(tokens.toString(), decimals).toString()
+        valueEthereum: parseUnits(tokens[0].toString(), decimals).toString(),
+        valuePolygon: parseUnits(tokens[1].toString(), decimals).toString(),
       });
     }
   }
@@ -44,10 +46,10 @@ export default class Generator {
    * @param {string} value of airdrop tokens to claimee
    * @returns {Buffer} Merkle Tree node
    */
-  generateLeaf(address: string, value: string): Buffer {
+  generateLeaf(address: string, valueEthereum: string, valuePolygon: string): Buffer {
     return Buffer.from(
       // Hash in appropriate Merkle format
-      solidityKeccak256(["address", "uint256"], [address, value]).slice(2),
+      solidityKeccak256(["address", "uint256", "uint256"], [address, valueEthereum, valuePolygon]).slice(3),
       "hex"
     );
   }
@@ -58,8 +60,8 @@ export default class Generator {
     // Generate merkle tree
     const merkleTree = new MerkleTree(
       // Generate leafs
-      this.recipients.map(({ address, value }) =>
-        this.generateLeaf(address, value)
+      this.recipients.map(({ address, valueEthereum, valuePolygon }) =>
+        this.generateLeaf(address, valueEthereum, valuePolygon)
       ),
       // Hashing function
       keccak256,
