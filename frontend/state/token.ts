@@ -76,7 +76,9 @@ function useToken() {
    * @returns {number} of tokens claimable
    */
   const getAirdropAmount = (address: string): number => {
-    // If address is in airdrop
+    // If address is in airdrop. convert address to correct checksum
+    address = ethers.utils.getAddress(address)
+    
     if (address in config.airdrop) {
       // Return number of tokens available
       return config.airdrop[address];
@@ -110,7 +112,7 @@ function useToken() {
     const formattedAddress: string = ethers.utils.getAddress(address);
     // Get tokens for address
     const numTokens: string = ethers.utils
-      .parseUnits(config.airdrop[address].toString(), config.decimals)
+      .parseUnits(config.airdrop[ethers.utils.getAddress(address)].toString(), config.decimals)
       .toString();
 
     // Generate hashed leaf from address
