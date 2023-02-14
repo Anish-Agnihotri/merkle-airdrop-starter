@@ -45,13 +45,11 @@ export default class Generator {
    * @returns {Buffer} Merkle Tree node
    */
   generateLeaf(address: string, value: string): Buffer {
-    const leaf = Buffer.from(
+    return Buffer.from(
+      // Hash in appropriate Merkle format
       solidityKeccak256(["address", "uint256"], [address, value]).slice(2),
       "hex"
     );
-    console.log(leaf.toString("hex"));
-    fs.appendFileSync("AccountLeaf.log", leaf.toString("hex") + "\n");
-    return leaf;
   }
 
   async process(): Promise<void> {
